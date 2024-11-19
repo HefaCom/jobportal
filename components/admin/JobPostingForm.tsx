@@ -12,8 +12,10 @@ import JobRequirements from './JobRequirements'
 import JobPreview from './JobPreview'
 import { db } from '@/app/firebase'// Import the Firestore database
 import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
-import Toastify from 'toastify-js'; // Import Toastify
+// import Toastify from 'toastify-js'; // Import Toastify
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const jobFormSchema = z.object({
   title: z.string().min(1, 'Job title is required'),
   company: z.string().min(1, 'Company name is required'),
@@ -47,26 +49,28 @@ export default function JobPostingForm() {
       await setDoc(docRef, data); // Save the data to Firestore
 
       // Show success notification
-      Toastify({
-        text: "Job posted successfully!",
-        duration: 3000,
-        gravity: "top", // `top` or `bottom`
-        position: 'right', // `left`, `center` or `right`
-        backgroundColor: "green",
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-      }).showToast();
+      toast.success("Job posted successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
       console.error("Error adding document: ", error);
 
       // Show error notification
-      Toastify({
-        text: "Failed to post job. Please try again.",
-        duration: 3000,
-        gravity: "top",
-        position: 'right',
-        backgroundColor: "red",
-        stopOnFocus: true,
-      }).showToast();
+      toast.error("Failed to post job. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
@@ -74,29 +78,32 @@ export default function JobPostingForm() {
   const prevStep = () => setStep(step - 1)
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {step === 1 && <JobBasicInfo form={form} />}
-        {step === 2 && <JobDescription form={form} />}
-        {step === 3 && <JobRequirements form={form} />}
-        {step === 4 && <JobPreview form={form} />}
+    <>
+      <ToastContainer />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          {step === 1 && <JobBasicInfo form={form} />}
+          {step === 2 && <JobDescription form={form} />}
+          {step === 3 && <JobRequirements form={form} />}
+          {step === 4 && <JobPreview form={form} />}
 
-        <div className="flex justify-between">
-          {step > 1 && (
-            <Button type="button" variant="outline" onClick={prevStep}>
-              Previous
-            </Button>
-          )}
-          {step < 4 && (
-            <Button type="button" onClick={nextStep}>
-              Next
-            </Button>
-          )}
-          {step === 4 && (
-            <Button type="submit">Post Job</Button>
-          )}
-        </div>
-      </form>
-    </Form>
+          <div className="flex justify-between">
+            {step > 1 && (
+              <Button type="button" variant="outline" onClick={prevStep}>
+                Previous
+              </Button>
+            )}
+            {step < 4 && (
+              <Button type="button" onClick={nextStep}>
+                Next
+              </Button>
+            )}
+            {step === 4 && (
+              <Button type="submit">Post Job</Button>
+            )}
+          </div>
+        </form>
+      </Form>
+    </>
   )
 }

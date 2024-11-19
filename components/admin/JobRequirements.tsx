@@ -1,3 +1,4 @@
+
 import { useFieldArray } from 'react-hook-form'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -17,8 +18,9 @@ interface FormData {
 
 export default function JobRequirements({ form }: { form: UseFormReturn<FormData> }) { // Update the type
     // const [link, setLink] = useState('');
-  const { fields, append, remove } = useFieldArray<string>({
+  const { fields, append, remove } = useFieldArray({ // Removed the type parameter
     control: form.control,
+    // link: link,
     name: "requirements", // Ensure this matches the FormData interface
   })
     
@@ -68,7 +70,7 @@ export default function JobRequirements({ form }: { form: UseFormReturn<FormData
         variant="outline"
         size="sm"
         className="mt-2"
-        onClick={() => append('')} // Change here
+        onClick={() => append('')}
       >
         <Plus className="h-4 w-4 mr-2" />
         Add Requirement

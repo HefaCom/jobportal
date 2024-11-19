@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import JobCard from '@/components/JobCard'
 import Sidebar from '@/components/SideBar'
@@ -19,6 +19,18 @@ const mockJobs = [
 export default function Jobs() {
   const [jobs, setJobs] = useState(mockJobs) // setJobs is declared but not used yet
 
+  // Example function to update jobs
+  const updateJobs = (newJobs: { id: string; title: string; company: string; location: string; salary: string; }[]) => {
+    setJobs(newJobs);
+  }
+
+  // Use useEffect to call updateJobs once on component mount
+  useEffect(() => {
+    updateJobs([
+      ...mockJobs, // Spread existing mock jobs
+      { id: '4', title: 'Data Scientist', company: 'Data Co', location: 'Austin, TX', salary: '$110k - $160k' },
+    ]);
+  }, []); // Empty dependency array to run only once
 
   return (
     <>
